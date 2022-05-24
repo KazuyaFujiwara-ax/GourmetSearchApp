@@ -106,6 +106,24 @@ class ShopListViewController: UIViewController, UITableViewDelegate, UITableView
         task.resume()
     }
     
+    // 店舗の個室有無・カード利用可否・禁煙有無のラベルを作成する
+    func makeShopInfoLabel(private_room: String, card: String, non_smoking: String) -> String {
+        var result = ""
+        
+        // 個室がある場合は「あり」を表示
+        if(private_room.prefix(2) == "あり") {
+            result += "あり,"
+        }
+        // カードが利用可の場合は「カード利用可」を表示
+        if(card == "利用可") {
+            result += "カード利用可,"
+        }
+        // 禁煙情報は常に表示
+        result += non_smoking
+        
+        return result
+    }
+    
     // tableView関連
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
@@ -118,12 +136,15 @@ class ShopListViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ShopListCell", for: indexPath) as! ShopListCell
         let shopData = shopDataArray[indexPath.row]
+        
+        // 店の各ラベルを設定する
         cell.shopNameLabel.text = shopData.name
         cell.shopGenreLabel.text = shopData.genreName
         cell.shopAddressLabel.text = shopData.address
+        cell.shopInfoLabel.text = makeShopInfoLabel(private_room: shopData.private_room, card: shopData.card, non_smoking: shopData.non_smoking)
+        cell.shopInfoLabel.sizeToFit()
         
-        // WIP: 項目がない場合にも対応する
-        cell.shopInfoLabel.text = shopData.private_room + "," + shopData.card + "," + shopData.non_smoking
+        // 店の画像を設定する
         let shopPhotoUrl = shopData.photoSizeM
         if let cacheImage = imageCache.object(forKey: shopPhotoUrl as AnyObject) {
             cell.shopImageView.image = cacheImage
@@ -132,7 +153,6 @@ class ShopListViewController: UIViewController, UITableViewDelegate, UITableView
         guard let url = URL(string: shopPhotoUrl) else {
             return cell
         }
-        
         let request = URLRequest(url: url)
         let session = URLSession.shared
         let task = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
