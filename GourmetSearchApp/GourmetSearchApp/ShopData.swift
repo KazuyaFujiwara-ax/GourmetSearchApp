@@ -18,35 +18,58 @@ struct ShopData: Codable {
     let address: String
     let access: String
     let course: String
-    let free_drink: String
-    let free_food: String
-    let private_room: String
+    let freeDrink: String
+    let freeFood: String
+    let privateRoom: String
     let horigotatsu: String
     let tatami: String
     let card: String
-    let non_smoking: String
+    let nonSmoking: String
     
-    var genreName: String {
-        return genre.name
-    }
-    var photoSizeM: String {
-        return photo.pc.m
-    }
-    var photoSizeL: String {
-        return photo.pc.l
-    }
     
-    private let genre: Genre
-    private struct Genre: Codable {
-        let name: String
+    struct GenreInfo: Codable {
+        private enum GenreCodingKeys: String, CodingKey {
+            case name
+        }
+        
+        var name: String
     }
     
-    private let photo: Photo
-    private struct Photo: Codable {
-        let pc: PhotoPc
+    var genre: GenreInfo
+    
+    struct PhotoInfo: Codable {
+        struct PhotoPcInfo: Codable {
+            private enum PhotoPcCodingKeys: String, CodingKey {
+                case l = "l"
+                case m = "m"
+            }
+            
+            var l: String
+            var m: String
+        }
+        
+        private enum PhotoCodingKeys: String, CodingKey {
+            case pc = "pc"
+        }
+        
+        var pc: PhotoPcInfo
     }
-    private struct PhotoPc: Codable {
-        let l: String
-        let m: String
+    
+    var photo: PhotoInfo
+    
+    private enum CodingKeys: String, CodingKey {
+        case name
+        case address
+        case access
+        case course
+        case freeDrink = "free_drink"
+        case freeFood = "free_food"
+        case privateRoom = "private_room"
+        case horigotatsu
+        case tatami
+        case card
+        case nonSmoking = "non_smoking"
+        case genre
+        case photo
     }
 }
