@@ -7,23 +7,25 @@
 
 import UIKit
 
-class ShopListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ShopListViewController: UIViewController {
     
-    @IBOutlet var tableView: UITableView!
+    @IBOutlet private var tableView: UITableView!
     
-    var shopDataArray = [ShopData]()
-    var imageCache = NSCache<AnyObject, UIImage>()
-    let entryUrl: String = "http://webservice.recruit.co.jp/hotpepper/gourmet/v1/"
-    let parameter = ["key": apiKey, "large_area": "Z011", "count": "50", "format": "json"]
+    private var shopDataArray = [ShopData]()
+    private let entryUrl: String = "http://webservice.recruit.co.jp/hotpepper/gourmet/v1/"
+    private let parameter = ["key": apiKey, "large_area": "Z011", "count": "50", "format": "json"]
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // tableViewの設定
+        // NavigationBarのタイトル設定
+        self.navigationItem.title = "東京都の店舗一覧"
+        
+        // TableViewの設定
         tableView.delegate = self
         tableView.dataSource = self
         
-        // ShopListCellの登録
+        // TableViewCellの登録（店舗一覧セル）
         let nib = UINib(nibName: "ShopListCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "ShopListCell")
         
@@ -33,7 +35,7 @@ class ShopListViewController: UIViewController, UITableViewDelegate, UITableView
     
     // WIP: リクエスト関連は別ファイルに移管する予定
     // パラメータ文字列作成
-    func encodeParameter(key: String, value: String) -> String? {
+    private func encodeParameter(key: String, value: String) -> String? {
         guard let escapedValue = value.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed) else {
             return nil
         }
@@ -41,7 +43,7 @@ class ShopListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     // リクエストURL作成
-    func createRequestUrl(parameter: [String: String]) -> String {
+    private func createRequestUrl(parameter: [String: String]) -> String {
         var parameterString = ""
         for key in parameter.keys {
             guard let value = parameter[key] else {
@@ -60,7 +62,7 @@ class ShopListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     // リクエスト
-    func request(requestUrl: String) {
+    private func request(requestUrl: String) {
         guard let url = URL(string: requestUrl) else {
             return
         }
@@ -105,26 +107,19 @@ class ShopListViewController: UIViewController, UITableViewDelegate, UITableView
         }
         task.resume()
     }
-    
-    // 店舗の個室有無・カード利用可否・禁煙有無のラベルを作成する
-    func makeShopInfoLabel(private_room: String, card: String, non_smoking: String) -> String {
-        var result = ""
-        
-        // 個室がある場合は「あり」を表示
-        if(private_room.prefix(2) == "あり") {
-            result += "あり,"
-        }
-        // カードが利用可の場合は「カード利用可」を表示
-        if(card == "利用可") {
-            result += "カード利用可,"
-        }
-        // 禁煙情報は常に表示
-        result += non_smoking
-        
-        return result
+}
+
+extension ShopListViewController: UITableViewDelegate {
+    // 画面遷移
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        let shopDetailViewController = ShopDetailViewController()
+        shopDetailViewController.navigationItem.title = shopDataArray[indexPath.row].name
+        self.navigationController?.pushViewController(shopDetailViewController, animated: true)
     }
-    
-    // tableView関連
+}
+
+extension ShopListViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
@@ -134,45 +129,8 @@ class ShopListViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ShopListCell", for: indexPath) as! ShopListCell
-        let shopData = shopDataArray[indexPath.row]
-        
-        // 店の各ラベルを設定する
-        cell.shopNameLabel.text = shopData.name
-        cell.shopGenreLabel.text = shopData.genreName
-        cell.shopAddressLabel.text = shopData.address
-        cell.shopInfoLabel.text = makeShopInfoLabel(private_room: shopData.private_room, card: shopData.card, non_smoking: shopData.non_smoking)
-        cell.shopInfoLabel.sizeToFit()
-        
-        // 店の画像を設定する
-        let shopPhotoUrl = shopData.photoSizeM
-        if let cacheImage = imageCache.object(forKey: shopPhotoUrl as AnyObject) {
-            cell.shopImageView.image = cacheImage
-            return cell
-        }
-        guard let url = URL(string: shopPhotoUrl) else {
-            return cell
-        }
-        let request = URLRequest(url: url)
-        let session = URLSession.shared
-        let task = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
-            guard error == nil else {
-                return
-            }
-            guard let data = data else {
-                return
-            }
-            guard let image = UIImage(data: data) else {
-                return
-            }
-            self.imageCache.setObject(image, forKey: shopPhotoUrl as AnyObject)
-            DispatchQueue.main.async {
-                cell.shopImageView.image = image
-            }
-        }
-        task.resume()
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ShopListCell", for: indexPath) as? ShopListCell else { return UITableViewCell() }
+        cell.setCellData(shopData: shopDataArray[indexPath.row])
         return cell
     }
-    
-    // WIP: 画面遷移を追加する
 }
