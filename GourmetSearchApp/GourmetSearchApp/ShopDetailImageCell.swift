@@ -21,6 +21,7 @@ class ShopDetailImageCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
+    // 店舗画像を設定する
     func setImage(imageUrl: String) {
         if let cacheImage = imageCache.object(forKey: imageUrl as AnyObject) {
             self.shopImageView.image = cacheImage

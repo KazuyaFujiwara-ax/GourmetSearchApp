@@ -31,6 +31,7 @@ class ShopDetailViewController: UIViewController {
         tableView.register(infoNib, forCellReuseIdentifier: "ShopDetailInfoCell")
     }
     
+    // 店舗情報セル用のデータを作成
     private func makeShopInfoArray(shopData: ShopData) {
         shopInfoArray.removeAll()
         shopInfoArray.append(ShopInfo(title: "ジャンル", description: shopData.genre.name))
@@ -55,22 +56,20 @@ extension ShopDetailViewController: UITableViewDataSource {
         return 1
     }
     
-    // WIP
+    // セル数 = 店舗情報セルの数 + 店舗画像セル1つ
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return shopInfoArray.count + 1
     }
     
-    // WIP
+    // 一番上のセルは店舗画像、それ以外は各情報
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if (indexPath.row == 0) {
             guard let imageCell = tableView.dequeueReusableCell(withIdentifier: "ShopDetailImageCell", for: indexPath) as? ShopDetailImageCell else { return UITableViewCell() }
             imageCell.setImage(imageUrl: shopData.photo.pc.l)
-            
             return imageCell
         } else {
             guard let infoCell = tableView.dequeueReusableCell(withIdentifier: "ShopDetailInfoCell", for: indexPath) as? ShopDetailInfoCell else { return UITableViewCell() }
             infoCell.setCellData(shopInfo: shopInfoArray[indexPath.row - 1])
-            
             return infoCell
         }
     }

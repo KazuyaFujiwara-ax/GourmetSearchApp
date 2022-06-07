@@ -7,6 +7,7 @@
 
 import UIKit
 
+// 店舗情報セル用
 struct ShopInfo {
     let title: String
     let description: String
@@ -30,7 +31,7 @@ class ShopDetailInfoCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    // セルのラベルを設定するs
+    // セルのタイトル・説明ラベルを設定する
     func setCellData(shopInfo: ShopInfo) {
         self.shopInfoTitleLabel.text = shopInfo.title
         self.shopInfoDescriptionLabel.text = shopInfo.description
