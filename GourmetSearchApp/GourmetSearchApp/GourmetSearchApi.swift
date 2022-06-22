@@ -50,11 +50,11 @@ class GourmetSearchApi {
                 
                 // WIP: アラートアクションの設定をする
                 let okAction = UIAlertAction(title: "OK", style: .default) { action in
-                    print("test yes")
+                    print("Alert: tap OK")
                     vc.dismiss(animated: true, completion: nil)
                 }
                 let cancelAction = UIAlertAction(title: "キャンセル", style: .cancel) { action in
-                    print("test cancel")
+                    print("Alert: tap cancel")
                     vc.dismiss(animated: true, completion: nil)
                 }
                 alert.addAction(okAction)
