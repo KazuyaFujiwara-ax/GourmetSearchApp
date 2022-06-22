@@ -56,20 +56,4 @@ struct ShopData: Codable {
     }
     
     var photo: PhotoInfo
-    
-    private enum CodingKeys: String, CodingKey {
-        case name
-        case address
-        case access
-        case course
-        case freeDrink = "free_drink"
-        case freeFood = "free_food"
-        case privateRoom = "private_room"
-        case horigotatsu
-        case tatami
-        case card
-        case nonSmoking = "non_smoking"
-        case genre
-        case photo
-    }
 }

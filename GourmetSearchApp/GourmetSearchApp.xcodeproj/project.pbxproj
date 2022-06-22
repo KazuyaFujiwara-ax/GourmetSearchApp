@@ -78,23 +78,23 @@
 		2ACECAA7282F77F2008F202A /* GourmetSearchApp */ = {
 			isa = PBXGroup;
 			children = (
+				2ACECAB1282F77F4008F202A /* Assets.xcassets */,
+				2ACECAA8282F77F2008F202A /* AppDelegate.swift */,
+				2ACECAAA282F77F2008F202A /* SceneDelegate.swift */,
+				2ACECAB3282F77F4008F202A /* LaunchScreen.storyboard */,
+				2ACECAD22838DC0B008F202A /* Secret.swift */,
+				2ACECAD82843BC06008F202A /* GourmetSearchApi.swift */,
+				2ACECAD028310BE9008F202A /* ShopData.swift */,
 				2ACECAC0282F7A42008F202A /* ShopDetailImageCell.swift */,
 				2ACECABF282F7A42008F202A /* ShopDetailImageCell.xib */,
 				2ACECAC1282F7A42008F202A /* ShopDetailInfoCell.swift */,
 				2ACECABE282F7A42008F202A /* ShopDetailInfoCell.xib */,
+				2ACECADA2844EDCE008F202A /* ShopDetailViewController.swift */,
+				2ACECADB2844EDCE008F202A /* ShopDetailViewController.xib */,
 				2ACECAC2282F7A42008F202A /* ShopListCell.swift */,
 				2ACECAC4282F7A43008F202A /* ShopListCell.xib */,
 				2ACECAC5282F7A43008F202A /* ShopListViewController.swift */,
-				2ACECADA2844EDCE008F202A /* ShopDetailViewController.swift */,
-				2ACECADB2844EDCE008F202A /* ShopDetailViewController.xib */,
-				2ACECAD82843BC06008F202A /* GourmetSearchApi.swift */,
-				2ACECAD028310BE9008F202A /* ShopData.swift */,
-				2ACECAD22838DC0B008F202A /* Secret.swift */,
 				2ACECAC3282F7A43008F202A /* ShopListViewController.xib */,
-				2ACECAA8282F77F2008F202A /* AppDelegate.swift */,
-				2ACECAAA282F77F2008F202A /* SceneDelegate.swift */,
-				2ACECAB1282F77F4008F202A /* Assets.xcassets */,
-				2ACECAB3282F77F4008F202A /* LaunchScreen.storyboard */,
 				2ACECAB6282F77F4008F202A /* Info.plist */,
 			);
 			path = GourmetSearchApp;

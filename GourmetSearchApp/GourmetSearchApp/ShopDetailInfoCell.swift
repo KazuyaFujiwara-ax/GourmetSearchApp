@@ -7,6 +7,17 @@
 
 import UIKit
 
+// 店舗情報セル用
+struct ShopInfo {
+    let title: String
+    let description: String
+    
+    init(title: String, description: String) {
+        self.title = title
+        self.description = description
+    }
+}
+
 class ShopDetailInfoCell: UITableViewCell {
     
     @IBOutlet private weak var shopInfoTitleLabel: UILabel!
@@ -20,10 +31,10 @@ class ShopDetailInfoCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    // セルのラベルを設定する
-    func setCellData(title: String, description: String) {
-        self.shopInfoTitleLabel.text = title
-        self.shopInfoDescriptionLabel.text = description
+    // セルのタイトル・説明ラベルを設定する
+    func setCellData(shopInfo: ShopInfo) {
+        self.shopInfoTitleLabel.text = shopInfo.title
+        self.shopInfoDescriptionLabel.text = shopInfo.description
         self.shopInfoDescriptionLabel.sizeToFit()
     }
 }

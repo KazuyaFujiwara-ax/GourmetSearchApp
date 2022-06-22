@@ -59,28 +59,12 @@ class ShopListCell: UITableViewCell {
         let shopPhotoUrl = shopData.photo.pc.m
         if let cacheImage = imageCache.object(forKey: shopPhotoUrl as AnyObject) {
             self.shopImageView.image = cacheImage
-            return
-        }
-        guard let url = URL(string: shopPhotoUrl) else {
-            return
-        }
-        let request = URLRequest(url: url)
-        let session = URLSession.shared
-        let task = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
-            guard error == nil else {
-                return
-            }
-            guard let data = data else {
-                return
-            }
-            guard let image = UIImage(data: data) else {
-                return
-            }
-            self.imageCache.setObject(image, forKey: shopPhotoUrl as AnyObject)
-            DispatchQueue.main.async {
-                self.shopImageView.image = image
+        } else {
+            GourmetSearchApi.getImage(imageUrl: shopData.photo.pc.m) {image in
+                DispatchQueue.main.async {
+                    self.shopImageView.image = image
+                }
             }
         }
-        task.resume()
     }
 }
