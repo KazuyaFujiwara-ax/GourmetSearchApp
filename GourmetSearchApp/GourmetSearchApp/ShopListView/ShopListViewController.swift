@@ -28,7 +28,8 @@ class ShopListViewController: UIViewController {
         tableView.register(nib, forCellReuseIdentifier: "ShopListCell")
         
         shopDataArray.removeAll()
-        GourmetSearchApi.request(vc: self) {shopDataArray in
+        let api = GourmetSearchApi()
+        api.request(vc: self) {shopDataArray in
             DispatchQueue.main.async {
                 self.shopDataArray = shopDataArray
                 self.tableView.reloadData()
