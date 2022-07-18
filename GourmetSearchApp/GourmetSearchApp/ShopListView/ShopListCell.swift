@@ -60,7 +60,10 @@ class ShopListCell: UITableViewCell {
         if let cacheImage = imageCache.object(forKey: shopPhotoUrl as AnyObject) {
             self.shopImageView.image = cacheImage
         } else {
-            GourmetSearchApi.getImage(imageUrl: shopData.photo.pc.m) {image in
+            guard let url = URL(string: shopData.photo.pc.m) else {
+                return
+            }
+            url.getImage { image in
                 DispatchQueue.main.async {
                     self.shopImageView.image = image
                 }
