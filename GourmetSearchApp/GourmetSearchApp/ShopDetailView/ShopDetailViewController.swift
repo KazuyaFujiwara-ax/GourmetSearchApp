@@ -9,6 +9,10 @@ import UIKit
 
 class ShopDetailViewController: UIViewController {
     
+    enum CellType: Int {
+        case image, info
+    }
+    
     @IBOutlet private var tableView: UITableView!
     
     var shopData: ShopData!
@@ -63,14 +67,22 @@ extension ShopDetailViewController: UITableViewDataSource {
     
     // 一番上のセルは店舗画像、それ以外は各情報
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if (indexPath.row == 0) {
+        guard let type = CellType(rawValue: min(indexPath.row, 1)) else { return UITableViewCell() }
+        switch type {
+        case .image:
             guard let imageCell = tableView.dequeueReusableCell(withIdentifier: "ShopDetailImageCell", for: indexPath) as? ShopDetailImageCell else { return UITableViewCell() }
             imageCell.setImage(imageUrl: shopData.photo.pc.l)
             return imageCell
-        } else {
+        case .info:
             guard let infoCell = tableView.dequeueReusableCell(withIdentifier: "ShopDetailInfoCell", for: indexPath) as? ShopDetailInfoCell else { return UITableViewCell() }
             infoCell.setCellData(shopInfo: shopInfoArray[indexPath.row - 1])
             return infoCell
         }
+    }
+}
+
+extension Array {
+    subscript (safe index: Index) -> Element? {
+        return indices.contains(index) ? self[index] : nil
     }
 }

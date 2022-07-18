@@ -37,6 +37,28 @@ class GourmetSearchApi {
         return entryUrl + "?" + parameterString
     }
     
+    // 通信失敗時のアラート
+    class private func showAlert(vc: ShopListViewController, completion: @escaping ([ShopData]) -> Void) {
+        // アラートコントローラを作成
+        let alert = UIAlertController(title: "通信エラー", message: "通信に失敗しました。\n再度取得しますか？", preferredStyle: .alert)
+        
+        // アラートアクションを設定（OKなら通信をリトライ、キャンセルなら何もしない）
+        let okAction = UIAlertAction(title: "OK", style: .default) { action in
+            request(vc: vc, completion: completion)
+            vc.dismiss(animated: true, completion: nil)
+        }
+        let cancelAction = UIAlertAction(title: "キャンセル", style: .cancel) { action in
+            vc.dismiss(animated: true, completion: nil)
+        }
+        alert.addAction(okAction)
+        alert.addAction(cancelAction)
+        
+        // アラートを表示
+        DispatchQueue.main.async {
+            vc.present(alert, animated: true, completion: nil)
+        }
+    }
+    
     // グルメサーチAPIリクエスト
     class func request(vc: ShopListViewController, completion: @escaping ([ShopData]) -> Void) {
         guard let url = URL(string: createRequestUrl(parameter: parameter)) else {
@@ -46,23 +68,7 @@ class GourmetSearchApi {
         let session = URLSession.shared
         let task = session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
             guard error == nil else {
-                let alert = UIAlertController(title: "通信エラー", message: "通信に失敗しました。\n再度取得しますか？", preferredStyle: .alert)
-                
-                // WIP: アラートアクションの設定をする
-                let okAction = UIAlertAction(title: "OK", style: .default) { action in
-                    print("test yes")
-                    vc.dismiss(animated: true, completion: nil)
-                }
-                let cancelAction = UIAlertAction(title: "キャンセル", style: .cancel) { action in
-                    print("test cancel")
-                    vc.dismiss(animated: true, completion: nil)
-                }
-                alert.addAction(okAction)
-                alert.addAction(cancelAction)
-                
-                DispatchQueue.main.async {
-                    vc.present(alert, animated: true, completion: nil)
-                }
+                showAlert(vc: vc, completion: completion)
                 return
             }
             
